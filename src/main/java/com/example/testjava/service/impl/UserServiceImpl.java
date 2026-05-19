@@ -1,6 +1,7 @@
 package com.example.testjava.service.impl;
 
 import com.example.testjava.common.ApiCode;
+import com.example.testjava.dto.PageResponse;
 import com.example.testjava.dto.user.UserCreateRequest;
 import com.example.testjava.dto.user.UserResponse;
 import com.example.testjava.dto.user.UserUpdateRequest;
@@ -8,6 +9,9 @@ import com.example.testjava.entity.UserEntity;
 import com.example.testjava.exception.BusinessException;
 import com.example.testjava.repository.UserRepository;
 import com.example.testjava.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,11 +49,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> listUsers() {
-        return userRepository.findAll()
+    public PageResponse<UserResponse> listUsers(int page, int size) {
+        if (page < 1) {
+            throw new BusinessException(ApiCode.BAD_REQUEST, "page must be greater than or equal to 1");
+        }
+        if (size < 1 || size > 100) {
+            throw new BusinessException(ApiCode.BAD_REQUEST, "size must be between 1 and 100");
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<UserEntity> userPage = userRepository.findAll(pageable);
+        List<UserResponse> records = userPage.getContent()
                 .stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+        return new PageResponse<>(
+                records,
+                userPage.getTotalElements(),
+                page,
+                size,
+                userPage.getTotalPages());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.testjava.controller;
 
 import com.example.testjava.dto.ApiResponse;
+import com.example.testjava.dto.PageResponse;
 import com.example.testjava.dto.user.UserCreateRequest;
 import com.example.testjava.dto.user.UserResponse;
 import com.example.testjava.dto.user.UserUpdateRequest;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -41,8 +42,10 @@ public class UserController {
     }
 
     @GetMapping
-    public ApiResponse<List<UserResponse>> listUsers() {
-        return ApiResponse.success(userService.listUsers());
+    public ApiResponse<PageResponse<UserResponse>> listUsers(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ApiResponse.success(userService.listUsers(page, size));
     }
 
     @PutMapping("/{id}")

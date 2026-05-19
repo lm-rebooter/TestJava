@@ -1,10 +1,9 @@
 package com.example.testjava.service;
 
+import com.example.testjava.dto.PageResponse;
 import com.example.testjava.dto.user.UserCreateRequest;
 import com.example.testjava.dto.user.UserResponse;
 import com.example.testjava.dto.user.UserUpdateRequest;
-
-import java.util.List;
 
 public interface UserService {
 
@@ -12,7 +11,7 @@ public interface UserService {
 
     UserResponse getUser(Long id);
 
-    List<UserResponse> listUsers();
+    PageResponse<UserResponse> listUsers(int page, int size);
 
     UserResponse updateUser(Long id, UserUpdateRequest request);
 
