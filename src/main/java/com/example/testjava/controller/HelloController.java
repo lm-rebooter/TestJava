@@ -1,5 +1,6 @@
 package com.example.testjava.controller;
 
+import com.example.testjava.dto.ApiResponse;
 import com.example.testjava.dto.HelloResponse;
 import com.example.testjava.service.HelloService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +19,13 @@ public class HelloController {
     }
 
     @GetMapping("/api/hello")
-    public HelloResponse hello(@RequestParam(value = "name", required = false) String name) {
-        return helloService.sayHello(name);
+    public ApiResponse<HelloResponse> hello(@RequestParam(value = "name", required = false) String name) {
+        return ApiResponse.success(helloService.sayHello(name));
     }
 
 
     @GetMapping("/api/hello1")
-    public String hello1() {
-        return "Hello111, TestJava!";
+    public ApiResponse<String> hello1() {
+        return ApiResponse.success("Hello111, TestJava!");
     }
 }

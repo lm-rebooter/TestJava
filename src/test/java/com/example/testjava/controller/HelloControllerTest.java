@@ -21,15 +21,19 @@ class HelloControllerTest {
     void helloReturnsDefaultMessage() throws Exception {
         mockMvc.perform(get("/test/api/hello"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Hello, TestJava!"))
-                .andExpect(jsonPath("$.source").value("in-memory"));
+                .andExpect(jsonPath("$.code").value("0"))
+                .andExpect(jsonPath("$.message").value("success"))
+                .andExpect(jsonPath("$.data.message").value("Hello, TestJava!"))
+                .andExpect(jsonPath("$.data.source").value("in-memory"));
     }
 
     @Test
     void helloReturnsMessageForRequestName() throws Exception {
         mockMvc.perform(get("/test/api/hello").param("name", "Codex"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Hello, Codex!"))
-                .andExpect(jsonPath("$.source").value("in-memory"));
+                .andExpect(jsonPath("$.code").value("0"))
+                .andExpect(jsonPath("$.message").value("success"))
+                .andExpect(jsonPath("$.data.message").value("Hello, Codex!"))
+                .andExpect(jsonPath("$.data.source").value("in-memory"));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.testjava.controller;
 
+import com.example.testjava.dto.ApiResponse;
 import com.example.testjava.dto.user.UserCreateRequest;
 import com.example.testjava.dto.user.UserResponse;
 import com.example.testjava.dto.user.UserUpdateRequest;
@@ -29,28 +30,28 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse createUser(@RequestBody UserCreateRequest request) {
-        return userService.createUser(request);
+    public ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request) {
+        return ApiResponse.success(userService.createUser(request));
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+    public ApiResponse<UserResponse> getUser(@PathVariable Long id) {
+        return ApiResponse.success(userService.getUser(id));
     }
 
     @GetMapping
-    public List<UserResponse> listUsers() {
-        return userService.listUsers();
+    public ApiResponse<List<UserResponse>> listUsers() {
+        return ApiResponse.success(userService.listUsers());
     }
 
     @PutMapping("/{id}")
-    public UserResponse updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        return userService.updateUser(id, request);
+    public ApiResponse<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+        return ApiResponse.success(userService.updateUser(id, request));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long id) {
+    public ApiResponse<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+        return ApiResponse.success();
     }
 }
