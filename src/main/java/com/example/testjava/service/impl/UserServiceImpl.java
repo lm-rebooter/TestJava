@@ -1,9 +1,11 @@
 package com.example.testjava.service.impl;
 
+import com.example.testjava.common.ApiCode;
 import com.example.testjava.dto.user.UserCreateRequest;
 import com.example.testjava.dto.user.UserResponse;
 import com.example.testjava.dto.user.UserUpdateRequest;
 import com.example.testjava.entity.UserEntity;
+import com.example.testjava.exception.BusinessException;
 import com.example.testjava.repository.UserRepository;
 import com.example.testjava.service.UserService;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse createUser(UserCreateRequest request) {
         String username = normalizeUsername(request.getUsername());
         if (userRepository.existsByUsername(username)) {
-            throw new IllegalArgumentException("Username already exists: " + username);
+            throw new BusinessException(ApiCode.CONFLICT, "Username already exists: " + username);
         }
 
         UserEntity userEntity = new UserEntity();
@@ -59,7 +61,7 @@ public class UserServiceImpl implements UserService {
         userRepository.findByUsername(username)
                 .filter(existingUser -> !existingUser.getId().equals(id))
                 .ifPresent(existingUser -> {
-                    throw new IllegalArgumentException("Username already exists: " + username);
+                    throw new BusinessException(ApiCode.CONFLICT, "Username already exists: " + username);
                 });
 
         userEntity.setUsername(username);
@@ -78,12 +80,12 @@ public class UserServiceImpl implements UserService {
 
     private UserEntity findUser(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
+                .orElseThrow(() -> new BusinessException(ApiCode.NOT_FOUND, "User not found: " + id));
     }
 
     private String normalizeUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Username must not be blank");
+            throw new BusinessException(ApiCode.BAD_REQUEST, "Username must not be blank");
         }
         return username.trim();
     }

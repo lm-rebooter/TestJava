@@ -1,9 +1,23 @@
 package com.example.testjava.dto.user;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class UserUpdateRequest {
 
+    @NotBlank(message = "username must not be blank")
+    @Size(max = 50, message = "username length must be less than or equal to 50")
     private String username;
+
+    @Email(message = "email format is invalid")
+    @Size(max = 100, message = "email length must be less than or equal to 100")
     private String email;
+
+    @Min(value = 0, message = "age must be greater than or equal to 0")
+    @Max(value = 150, message = "age must be less than or equal to 150")
     private Integer age;
 
     public String getUsername() {

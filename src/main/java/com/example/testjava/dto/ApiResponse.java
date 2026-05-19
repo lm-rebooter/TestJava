@@ -1,5 +1,7 @@
 package com.example.testjava.dto;
 
+import com.example.testjava.common.ApiCode;
+
 public class ApiResponse<T> {
 
     private String code;
@@ -13,11 +15,11 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>("0", "success", data);
+        return new ApiResponse<>(ApiCode.SUCCESS, "success", data);
     }
 
     public static <T> ApiResponse<T> success() {
-        return new ApiResponse<>("0", "success", null);
+        return new ApiResponse<>(ApiCode.SUCCESS, "success", null);
     }
 
     public static <T> ApiResponse<T> fail(String code, String message) {
